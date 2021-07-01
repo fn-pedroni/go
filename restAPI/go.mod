@@ -1,4 +1,4 @@
-module restAPI
+module go/restAPI
 
 go 1.16
 
