@@ -84,22 +84,28 @@ func updateArticle(w http.ResponseWriter, r *http.Request) {
 	var updatedArticle Article
 	json.Unmarshal(reqBody, &updatedArticle)
 
+	var article *Article
+
 	// we then need to loop through all our articles
 	for index := range Articles {
 		// if our id path parameter matches one of our
 		// articles
 		if Articles[index].Id == id {
 			// updates our Article
-			article := &Articles[index]
+			article = &Articles[index]
 			article.Content = updatedArticle.Content
 			article.Desc = updatedArticle.Desc
 			article.Title = updatedArticle.Title
 			break
 		}
 	}
+	// Se non trova l'articolo da aggiornare
+	if article == nil {
+		http.NotFound(w, r)
+	} else {
+		json.NewEncoder(w).Encode(article)
+	}
 
-	updatedArticle.Content = "BABABUI BABABUI!"
-	json.NewEncoder(w).Encode(updatedArticle)
 }
 
 func deleteArticle(w http.ResponseWriter, r *http.Request) {
